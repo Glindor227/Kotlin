@@ -19,7 +19,7 @@
             android:layout_marginTop="@dimen/min_margin"
             android:layout_marginStart="@dimen/min_margin"
             android:layout_marginEnd="@dimen/min_margin"
-            tools:text="Заголовок заметки"/>
+            tools:text="@string/tools_title"/>
 
 
         <TextView
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/min_margin"
-            tools:text="текст заметки"/>
+            tools:text="@string/tools_text"/>
 
 
 

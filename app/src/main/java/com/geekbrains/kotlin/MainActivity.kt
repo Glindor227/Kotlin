@@ -6,11 +6,11 @@ import android.arch.lifecycle.ViewModelProviders
 
 import android.os.Bundle
 import android.support.v7.widget.StaggeredGridLayoutManager
-import com.geekbrains.kotlin.model.MyViewModel
+import com.geekbrains.kotlin.viewmodel.KeepViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    lateinit var viewModel: MyViewModel
+    lateinit var viewModel: KeepViewModel
     lateinit var adapter: NotesRVAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(my_toolbar)
 
-        viewModel = ViewModelProviders.of(this).get(MyViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(KeepViewModel::class.java)
 
         rv_notes.layoutManager = StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL)
         adapter = NotesRVAdapter()

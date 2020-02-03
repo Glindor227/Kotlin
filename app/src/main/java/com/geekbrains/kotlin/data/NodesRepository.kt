@@ -3,7 +3,7 @@ package com.geekbrains.kotlin.data
 import com.geekbrains.kotlin.data.entity.Note
 
 object NotesRepository {
-    private val notes: List<Note> = listOf(
+    val notes: List<Note> = listOf(
             Note(
                     "Планы на 02 февраля",
                     "1) Вымыть пол \n2) Позвонить Гоше \n Проверить его математику",
@@ -48,8 +48,9 @@ object NotesRepository {
                     0xffb2ff59.toInt()
             )
     )
-
+/*
     fun getNotes(): List<Note>{
         return notes
     }
+    */
 }

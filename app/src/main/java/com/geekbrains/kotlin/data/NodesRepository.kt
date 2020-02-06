@@ -1,56 +1,86 @@
 package com.geekbrains.kotlin.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.geekbrains.kotlin.data.entity.Note
+import java.util.*
 
 object NotesRepository {
-    val notes: List<Note> = listOf(
+
+    private val Notes_LD = MutableLiveData<List<Note>>()
+    private val notes: MutableList<Note> = mutableListOf(
             Note(
+                    UUID.randomUUID().toString(),
                     "Планы на 02 февраля",
                     "1) Вымыть пол \n2) Позвонить Гоше \n Проверить его математику",
-                    0xfff06292.toInt()
+                    Note.Color.GREEN
             ),
-            Note(
+            Note(UUID.randomUUID().toString(),
                     "Посмотреть фильм",
                     "Двое пап",
-                    0xff9575cd.toInt()
+                    Note.Color.RED
             ),
-            Note(
+            Note(UUID.randomUUID().toString(),
                     "Книги о театре",
                     "Юрский. Кто держит паузу",
-                    0xff64b5f6.toInt()
+                    Note.Color.BLUE
             ),
-            Note(
+            Note(UUID.randomUUID().toString(),
                     "Билеты бесплатно для попавших в беду",
                     "Фонд Милосердие. Ноколоямская 57/1",
-                    0xff4db6ac.toInt()
+                    Note.Color.GREEN
             ),
-            Note(
+            Note(UUID.randomUUID().toString(),
                     "",
                     "Рамиль Таймасов",
-                    0xffb2ff59.toInt()
+                    Note.Color.YELLOW
             ),
-            Note(
+            Note(UUID.randomUUID().toString(),
                     "Левитанский",
                     "Ну что с того, что я там был.\n" +
                             "Я был давно. Я все забыл.\n" +
                             "Не помню дней. Не помню дат.\n" +
                             "Ни тех форсированных рек...",
-                    0xffffeb3b.toInt()
+                    Note.Color.BLUE
             ),
-            Note(
+            Note(UUID.randomUUID().toString(),
                     "Клевый стих",
                     "Орлуша. По небу летят утки",
-                    0xffb2ff59.toInt()
+                    Note.Color.VIOLET
             ),
-            Note(
+            Note(UUID.randomUUID().toString(),
                     "Посмотреть",
                     "Фантазии Фарятьева \nПризнание в любви ",
-                    0xffb2ff59.toInt()
+                    Note.Color.WHITE
             )
     )
-/*
-    fun getNotes(): List<Note>{
-        return notes
+    init {
+        Notes_LD.value = notes
     }
-    */
+
+    fun addNode(note:Note){
+        val index : Int  = findNote(note)
+        Notes_LD.value = if (index==-1){
+            notes.add(note)
+            notes
+        }else{
+            notes[index]=note
+            notes
+        }
+    }
+
+    private fun findNote(note:Note):Int{
+        for (noteIndex in notes.indices){
+            if (notes[noteIndex]==note){
+                return noteIndex
+            }
+        }
+        return -1
+    }
+
+
+    fun getNotes():LiveData<List<Note>>{
+        return Notes_LD
+    }
+
 }

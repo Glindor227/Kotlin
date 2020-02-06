@@ -3,4 +3,7 @@
     <string name="toolbar_title">Заметки</string>
     <string name="tools_title">Заголовок заметки</string>
     <string name="tools_text">Текст заметки</string>
+    <string name="new_note_title">Новая заметка</string>
+    <string name="et_title">Заголовок</string>
+    <string name="et_note_text">Текст заметки</string>
 </resources>

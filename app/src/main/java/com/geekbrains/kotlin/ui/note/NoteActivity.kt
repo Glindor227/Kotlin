@@ -3,64 +3,68 @@ package com.geekbrains.kotlin.ui.note
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.geekbrains.kotlin.data.entity.Note
 import com.geekbrains.kotlin.R
+import com.geekbrains.kotlin.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_note.*
 import com.geekbrains.kotlin.viewmodel.NoteViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NoteActivity : AppCompatActivity() {
+
+class NoteActivity : BaseActivity<Note?, NoteViewState>() {
     companion object {
         private val EXTRA_NOTE = NoteActivity::class.java.name + "extra.NOTE"
         private const val DATE_TIME_FORMAT = "dd.MM.yy HH:mm"
-        private const val SAVE_DELAY = 2000L
 
-        fun start(context: Context, note: Note? = null) {
+        fun start(context: Context, noteId: String? = null) {
             val intent = Intent(context, NoteActivity::class.java)
-            intent.putExtra(EXTRA_NOTE, note)
+            intent.putExtra(EXTRA_NOTE, noteId)
             context.startActivity(intent)
         }
     }
 
+    override val layoutRes = R.layout.activity_note
+    override val viewModel: NoteViewModel by lazy { ViewModelProvider(this).get(NoteViewModel::class.java) }
     private var note: Note? = null
-    private lateinit var viewModel: NoteViewModel
 
-    private val textChangeListener = object : TextWatcher {
+    val textChahgeListener = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         override fun afterTextChanged(s: Editable?) {
             saveNote()
         }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_note)
-
-        note = intent.getParcelableExtra(EXTRA_NOTE)
         setSupportActionBar(toolbar)
-        supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        viewModel = ViewModelProvider(this).get(NoteViewModel::class.java)
+        val noteId = intent.getStringExtra(EXTRA_NOTE)
 
-        supportActionBar?.title = note?.let {
-            SimpleDateFormat(DATE_TIME_FORMAT, Locale.getDefault()).format(it.lastChanged)
+        noteId?.let {
+            viewModel.loadNote(it)
+        } ?: let {
+            supportActionBar?.title = getString(R.string.new_note_title)
+        }
+    }
+
+    override fun renderData(data: Note?) {
+        this.note = data
+        supportActionBar?.title = this.note?.let {
+            SimpleDateFormat(DATE_TIME_FORMAT, Locale.getDefault()).format(note!!.lastChanged)
         } ?: getString(R.string.new_note_title)
 
         initView()
     }
 
-    private fun initView() {
+    fun initView() {
         note?.let { note ->
             et_title.setText(note.title)
             et_body.setText(note.text)
@@ -77,32 +81,32 @@ class NoteActivity : AppCompatActivity() {
             toolbar.setBackgroundColor(ContextCompat.getColor(this, color))
         }
 
-        et_title.addTextChangedListener(textChangeListener)
-        et_body.addTextChangedListener(textChangeListener)
+        et_title.addTextChangedListener(textChahgeListener)
+        et_body.addTextChangedListener(textChahgeListener)
     }
 
     fun saveNote() {
         if (et_title.text == null || et_title.text!!.length < 3) return
 
-        Handler().postDelayed({
-            note = note?.copy(
+        note = note?.copy(
                 title = et_title.text.toString(),
                 text = et_body.text.toString(),
                 lastChanged = Date()
-            ) ?: createNewNote()
+        ) ?: Note(
+                UUID.randomUUID().toString(),
+                et_title.text.toString(),
+                et_body.text.toString()
+        )
 
-            note?.let { viewModel.save(it) }
-
-        }, SAVE_DELAY)
+        note?.let { viewModel.save(it) }
     }
-
-    private fun createNewNote(): Note = Note(UUID.randomUUID().toString(), et_title.text.toString(), et_body.text.toString())
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         android.R.id.home -> {
-            onBackPressed()
+            onBackPressed();
             true
         }
         else -> super.onOptionsItemSelected(item)
     }
 }
+

@@ -1,10 +1,6 @@
 package com.geekbrains.kotlin.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.geekbrains.kotlin.data.entity.Note
-import java.util.*
-
+/*
 object NotesRepository {
 
     private val Notes_LD = MutableLiveData<List<Note>>()
@@ -84,3 +80,4 @@ object NotesRepository {
     }
 
 }
+*/

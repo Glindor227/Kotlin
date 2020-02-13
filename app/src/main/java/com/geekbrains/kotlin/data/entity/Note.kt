@@ -6,7 +6,8 @@ import java.util.*
 
 
 @Parcelize
-data class Note(val id:String, val title: String, val text: String, val bgrColor: Color=Color.WHITE,val lastChanged: Date = Date()
+data class Note(val id:String= "", val title: String = "", val text: String = "",
+                val bgrColor: Color=Color.WHITE,val lastChanged: Date = Date()
 ): Parcelable {
     override fun equals(other: Any?): Boolean {
         if(javaClass != other?.javaClass) return false

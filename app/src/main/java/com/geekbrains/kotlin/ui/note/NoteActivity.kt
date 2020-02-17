@@ -33,7 +33,7 @@ class NoteActivity : BaseActivity<Note?, NoteViewState>() {
     override val viewModel: NoteViewModel by lazy { ViewModelProvider(this).get(NoteViewModel::class.java) }
     private var note: Note? = null
 
-    val textChahgeListener = object : TextWatcher {
+    private val textChahgeListener = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         override fun afterTextChanged(s: Editable?) {
@@ -64,11 +64,11 @@ class NoteActivity : BaseActivity<Note?, NoteViewState>() {
         initView()
     }
 
-    fun initView() {
-        note?.let { note ->
-            et_title.setText(note.title)
-            et_body.setText(note.text)
-            val color = when (note.bgrColor) {
+    private fun initView() {
+        note?.let {
+            et_title.setText(it.title)
+            et_body.setText(it.text)
+            val color = when (it.bgrColor) {
                 Note.Color.WHITE -> R.color.white
                 Note.Color.YELLOW -> R.color.yellow
                 Note.Color.GREEN -> R.color.green
@@ -77,7 +77,6 @@ class NoteActivity : BaseActivity<Note?, NoteViewState>() {
                 Note.Color.VIOLET -> R.color.violet
                 Note.Color.PINK -> R.color.pink
             }
-
             toolbar.setBackgroundColor(ContextCompat.getColor(this, color))
         }
 
@@ -103,7 +102,7 @@ class NoteActivity : BaseActivity<Note?, NoteViewState>() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         android.R.id.home -> {
-            onBackPressed();
+            onBackPressed()
             true
         }
         else -> super.onOptionsItemSelected(item)

@@ -5,9 +5,9 @@ import com.geekbrains.kotlin.data.error.FailAuthException
 import com.geekbrains.kotlin.ui.base.BaseViewModel
 import com.geekbrains.kotlin.ui.splash.SplashViewState
 
-class SplashViewModel:BaseViewModel<Boolean?,SplashViewState>(){
+class SplashViewModel(private val noteRep:NotesRepository2):BaseViewModel<Boolean?,SplashViewState>(){
     fun requestUser(){
-        NotesRepository2.getCurrentUser().observeForever {
+        noteRep.getCurrentUser().observeForever {
             viewStateLiveData.value = it?.let { SplashViewState(auth = true) }
             ?: SplashViewState(error = FailAuthException())
         }

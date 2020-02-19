@@ -11,15 +11,14 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 
-class FireStoreProvider : RemoteDataProvider {
+class FireStoreProvider(private val fbAuth: FirebaseAuth,private  val store: FirebaseFirestore) : RemoteDataProvider {
 
     companion object {
         private const val NOTES_COLLECTION = "notes"
         private const val USERS_COLLECTION = "users"
     }
 
-    private val store by lazy { FirebaseFirestore.getInstance() }
-    private val currentUser get() =  FirebaseAuth.getInstance().currentUser
+    private val currentUser get() =  fbAuth.currentUser
 
     override fun getCurrentUser() = MutableLiveData<AuthUser?>().apply {
         value = currentUser?.let {
@@ -71,6 +70,19 @@ class FireStoreProvider : RemoteDataProvider {
             userNodesCollection.document(note.id).set(note)
                     .addOnSuccessListener {
                         this.value = NoteResult.Success(note)
+                    }.addOnFailureListener {
+                        throw it
+                    }
+        } catch (e: Throwable) {
+            value = NoteResult.Error(e)
+        }
+    }
+
+    override fun deleteNote(noteId:String) = MutableLiveData<NoteResult>().apply {
+        try {
+            userNodesCollection.document(noteId).delete()
+                    .addOnSuccessListener {
+                        this.value = NoteResult.Success(null)
                     }.addOnFailureListener {
                         throw it
                     }

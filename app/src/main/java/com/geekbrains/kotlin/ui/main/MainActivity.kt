@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.firebase.ui.auth.AuthUI
 
@@ -19,12 +18,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 import com.geekbrains.kotlin.viewmodel.KeepViewModel
 import kotlinx.android.synthetic.main.activity_note.*
+import org.jetbrains.anko.alert
+import org.koin.android.viewmodel.ext.android.viewModel
 
-class MainActivity : BaseActivity<List<Note>?, KeepViewState>(),LogoutDialog.LogoutListener {
+class MainActivity : BaseActivity<List<Note>?, KeepViewState>() {
 
-    override val viewModel: KeepViewModel by lazy {
-        ViewModelProvider(this).get(KeepViewModel::class.java)
-    }
+    override val model: KeepViewModel by viewModel()
 
     companion object {
         fun start(cont:Context) = Intent(cont,MainActivity::class.java).apply { cont.startActivity(this) }
@@ -34,7 +33,6 @@ class MainActivity : BaseActivity<List<Note>?, KeepViewState>(),LogoutDialog.Log
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
         rv_notes.layoutManager =  StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -53,19 +51,22 @@ class MainActivity : BaseActivity<List<Note>?, KeepViewState>(),LogoutDialog.Log
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?)
-            = MenuInflater(this).inflate(R.menu.main,menu).let { true }
+    override fun onCreateOptionsMenu(menu: Menu?)= MenuInflater(this).inflate(R.menu.menu2,menu).let { true }
 
     private fun showDialog(){
-        supportFragmentManager.findFragmentByTag(LogoutDialog.TAG)
-                ?: LogoutDialog.createInstance().show(supportFragmentManager,LogoutDialog.TAG)
+        alert {
+            titleResource = R.string.logout_dialog_title
+            messageResource = R.string.logout_dialog_message
+            positiveButton(R.string.logout_dialog_ok){onLogout()}
+            neutralPressed(R.string.logout_dialog_cancel){dialog ->  dialog.dismiss()}
+        }.show()
     }
     override fun onOptionsItemSelected(item: MenuItem) = when(item.itemId){
-        R.id.logout -> showDialog().let { true }
+        R.id.logout2 -> showDialog().let { true }
         else -> false
     }
 
-    override fun onLogout() {
+    private fun onLogout() {
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener{

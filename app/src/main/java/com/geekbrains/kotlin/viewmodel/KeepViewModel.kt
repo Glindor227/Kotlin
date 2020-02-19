@@ -8,7 +8,7 @@ import com.geekbrains.kotlin.ui.base.BaseViewModel
 import com.geekbrains.kotlin.ui.main.KeepViewState
 
 
-class KeepViewModel : BaseViewModel<List<Note>?, KeepViewState>() {
+class KeepViewModel(noteRep:NotesRepository2) : BaseViewModel<List<Note>?, KeepViewState>() {
 
     private val notesObserver = object : Observer<NoteResult> {
         override fun onChanged(t: NoteResult?) {
@@ -25,14 +25,13 @@ class KeepViewModel : BaseViewModel<List<Note>?, KeepViewState>() {
         }
     }
 
-    private val repositoryNotes = NotesRepository2.getNotes()
+    private val repositoryNotes = noteRep.getNotes()
 
     init {
         viewStateLiveData.value = KeepViewState()
         repositoryNotes.observeForever(notesObserver)
     }
 
-//    fun viewState(): LiveData<KeepViewState> = viewStateLiveData
 
     override fun onCleared() {
         repositoryNotes.removeObserver(notesObserver)

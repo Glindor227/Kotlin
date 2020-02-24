@@ -7,9 +7,7 @@ import com.geekbrains.kotlin.data.error.FailAuthException
 
 import com.geekbrains.kotlin.data.model.NoteResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.*
 
 class FireStoreProvider(private val fbAuth: FirebaseAuth,private  val store: FirebaseFirestore) : RemoteDataProvider {
 
@@ -26,7 +24,6 @@ class FireStoreProvider(private val fbAuth: FirebaseAuth,private  val store: Fir
         }
     }
 
-//    private val noteReference = store.collection(NOTES_COLLECTION)
     private val userNodesCollection: CollectionReference
     get() = currentUser?.let {
         store.collection(USERS_COLLECTION).document(it.uid).collection(NOTES_COLLECTION) }
@@ -39,11 +36,7 @@ class FireStoreProvider(private val fbAuth: FirebaseAuth,private  val store: Fir
                     throw it
                 } ?: let {
                     snapshot?.let { snapshot ->
-                        val notes = mutableListOf<Note>()
-                        for (doc: QueryDocumentSnapshot in snapshot) {
-                            notes.add(doc.toObject(Note::class.java))
-                        }
-                        this.value = NoteResult.Success(notes)
+                        this.value = NoteResult.Success(snapshot.documents.map { it.toObject(Note::class.java) })
                     }
                 }
             }

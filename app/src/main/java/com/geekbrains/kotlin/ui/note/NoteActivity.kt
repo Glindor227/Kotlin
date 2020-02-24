@@ -21,7 +21,7 @@ import java.util.*
 
 class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
     companion object {
-        private val EXTRA_NOTE = NoteActivity::class.java.name + "extra.NOTE"
+        public val EXTRA_NOTE = NoteActivity::class.java.name + "extra.NOTE"
         private const val DATE_TIME_FORMAT = "dd.MM.yy HH:mm"
 
         fun start(context: Context, noteId: String? = null) {

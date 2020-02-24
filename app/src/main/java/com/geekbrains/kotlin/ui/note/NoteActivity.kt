@@ -21,7 +21,7 @@ import java.util.*
 
 class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
     companion object {
-        private val EXTRA_NOTE = NoteActivity::class.java.name + "extra.NOTE"
+        public val EXTRA_NOTE = NoteActivity::class.java.name + "extra.NOTE"
         private const val DATE_TIME_FORMAT = "dd.MM.yy HH:mm"
 
         fun start(context: Context, noteId: String? = null) {
@@ -72,8 +72,8 @@ class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
     private fun initView() {
         note?.let { note ->
             removeEditListener()
-            et_title.setText(note.title)
-            et_body.setText(note.text)
+            if(et_title.text.toString()!=note.title) et_title.setText(note.title)
+            if(et_body.text.toString()!=note.text) et_body.setText(note.text)
             color = note.bgrColor
             toolbar.setBackgroundColor(color.getColorInt(this))
             supportActionBar?.title = SimpleDateFormat(DATE_TIME_FORMAT, Locale.getDefault()).format(note.lastChanged)

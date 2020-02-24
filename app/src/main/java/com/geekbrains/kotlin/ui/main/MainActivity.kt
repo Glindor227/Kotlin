@@ -51,7 +51,7 @@ class MainActivity : BaseActivity<List<Note>?, KeepViewState>() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?)= MenuInflater(this).inflate(R.menu.menu2,menu).let { true }
+    override fun onCreateOptionsMenu(menu: Menu?)= menuInflater.inflate(R.menu.menu2,menu).let { true }
 
     private fun showDialog(){
         alert {

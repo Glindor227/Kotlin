@@ -1,5 +1,7 @@
 package com.geekbrains.kotlin.viewmodel
 
+import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.geekbrains.kotlin.data.NotesRepository2
 import com.geekbrains.kotlin.data.entity.Note
@@ -32,8 +34,10 @@ class KeepViewModel(noteRep:NotesRepository2) : BaseViewModel<List<Note>?, KeepV
         repositoryNotes.observeForever(notesObserver)
     }
 
+//    override fun getViewState(): LiveData<KeepViewState> = viewStateLiveData
 
-    override fun onCleared() {
+    @VisibleForTesting
+    override public fun onCleared() {
         repositoryNotes.removeObserver(notesObserver)
         super.onCleared()
     }

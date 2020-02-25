@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.firebase.ui.auth.AuthUI
@@ -17,7 +16,6 @@ import com.geekbrains.kotlin.ui.note.NoteActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 import com.geekbrains.kotlin.viewmodel.KeepViewModel
-import kotlinx.android.synthetic.main.activity_note.*
 import org.jetbrains.anko.alert
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -33,7 +31,7 @@ class MainActivity : BaseActivity<List<Note>?, KeepViewState>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(my_toolbar)
 
         rv_notes.layoutManager =  StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         adapter = KeepRVAdapter { note ->
